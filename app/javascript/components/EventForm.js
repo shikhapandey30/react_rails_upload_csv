@@ -5,6 +5,9 @@ import { Link } from 'react-router-dom';
 import { formatDate, isEmptyObject, validateEvent } from '../helpers/helpers';
 import EventNotFound from './EventNotFound';
 import 'pikaday/css/pikaday.css';
+import CSVReader from 'react-csv-reader'
+import axios from 'axios';
+
 
 class EventForm extends React.Component {
   constructor(props) {
@@ -18,6 +21,7 @@ class EventForm extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.dateInput = React.createRef();
+    this.handleForce = this.handleForce.bind(this);
   }
 
   componentDidMount() {
@@ -66,6 +70,20 @@ class EventForm extends React.Component {
     this.updateEvent(name, value);
   }
 
+  handleForce(data) {
+    debugger
+    console.log(data);
+    const patients_ids = [];
+    const headers = {
+      'Content-Type': 'application/json',
+      'User-Token': 'hjjjjjjjjjjjjjj'
+    }
+    axios.post(`http://localhost:4000/patients`, data, {
+      headers: headers
+      })
+    window.location = "/patients"
+    };
+
   renderErrors() {
     const { errors } = this.state;
 
@@ -96,6 +114,15 @@ class EventForm extends React.Component {
 
     return (
       <div>
+
+         <CSVReader
+        cssClass="csv-reader-input"
+        label="Select CSV with secret Death Star statistics"
+        onFileLoaded={this.handleForce}
+        onError={this.handleDarkSideForce}
+        inputId="ObiWan"
+        inputStyle={{color: 'red'}}
+      />
         <h2>{title}</h2>
 
         {this.renderErrors()}
