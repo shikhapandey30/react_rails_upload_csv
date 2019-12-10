@@ -16,6 +16,7 @@ class EventForm extends React.Component {
     this.state = {
       event: props.event,
       errors: {},
+      patients: [],
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -35,6 +36,17 @@ class EventForm extends React.Component {
         this.updateEvent('event_date', formattedDate);
       },
     });
+
+     const headers = {
+      'Content-Type': 'application/json',
+      'User-Token': 'hjjjjjjjjjjjjjj'
+    }
+    axios.get(`/patients`,{
+        headers: headers
+     })
+    .then(response => {
+      this.setState({ patients: response.data.data.patients });
+    })
   }
 
   componentWillReceiveProps({ event }) {
@@ -71,14 +83,13 @@ class EventForm extends React.Component {
   }
 
   handleForce(data) {
-    debugger
     console.log(data);
     const patients_ids = [];
     const headers = {
       'Content-Type': 'application/json',
       'User-Token': 'hjjjjjjjjjjjjjj'
     }
-    axios.post(`http://localhost:4000/patients`, data, {
+    axios.post(`/patients`, data, {
       headers: headers
       })
     window.location = "/patients"
@@ -104,7 +115,7 @@ class EventForm extends React.Component {
   }
 
   render() {
-    const { event } = this.state;
+    const { event, patients } = this.state;
     const { path } = this.props;
 
     if (!event.id && path === '/events/:id/edit') return <EventNotFound />;
@@ -123,6 +134,27 @@ class EventForm extends React.Component {
         inputId="ObiWan"
         inputStyle={{color: 'red'}}
       />
+
+      <table className="bordered">
+          <thead>
+            <tr>
+              <th>#ID</th>
+              <th>Name</th>
+              <th>Number</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            {patients.map(patient => (
+              <tr key={patient.id}>
+                <td>{patient.id}</td>
+                <td>{patient.name}</td>
+                <td>{patient.number}</td>
+                <td>{patient.description}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
         <h2>{title}</h2>
 
         {this.renderErrors()}

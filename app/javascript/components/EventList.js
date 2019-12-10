@@ -3,6 +3,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import axios from 'axios';
+
 
 class EventList extends React.Component {
   constructor(props) {
@@ -54,7 +56,6 @@ class EventList extends React.Component {
         Events
           <Link to="/events/new">New Event</Link>
         </h2>
-
         <input
           className="search"
           placeholder="Search"
@@ -62,9 +63,10 @@ class EventList extends React.Component {
           ref={this.searchInput}
           onKeyUp={this.updateSearchTerm}
         />
-
-        <ul>{this.renderEvents()}</ul>
+        <ul>{this.renderEvents()}
+        </ul>
       </section>
+
     );
   }
 }
